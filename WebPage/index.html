@@ -1,0 +1,245 @@
+
+<HTML>
+  <head>
+
+    <TITLE>Project Hessdalen - Weather Station</TITLE>
+
+    <meta charset="UTF-8">
+    <META NAME="description" CONTENT="Project Hessdalen">
+    <META NAME="keywords" CONTENT="Værstasjon, Hessdalen, Hessdalen-phenomena, norge">
+
+    <LINK rel="icon" HREF="../favicon.ico" TYPE="image/ico">
+    <LINK REL="SHORTCUT ICON" HREF="../favicon.ico">
+    <link rel="stylesheet" type="text/css" href="weatherStation_style.css">
+    <script type="text/javascript" src="js/amcharts.js"></script>
+    <script type="text/javascript" src="js/serial.js"></script>
+    <script type="text/javascript" src="js/light.js"></script>
+
+    <script type="text/javascript" src="weatherScripts.js"></script>
+
+
+
+  </head>
+
+
+  <body>
+
+    <!-- Title on webpage -->
+    <font size="+2">Værstajonene i Hessdalen<hr></font>
+
+    <!-- Content -->
+    <div id = "content">
+
+
+      <!-- Tabell og kurvepresentasjon av data-->
+
+      <div id = "weatherData">
+        <div id="loadingData"></div>
+
+        <!--<canvas id="chart" height='0px' width="81%" display: 'none'></canvas>!-->
+        <div id="chartdiv"></div>
+
+
+        <table id="table" style="display:none">
+          <caption style="font-size:1.2rem" id="tableTitle">TEMPERATURE</caption>
+            <thead id="theady"></thead>
+            <tbody id="tbody"></tbody>
+        </table>
+        <label id = "weatherDataText"></label>
+
+      </div>
+
+      <div id = "dataParametre">
+
+        <b>Pick a sensor:</b><br>
+
+          <label class = "checkboxContainer">
+            <input id= "radio_temperature" type="radio" name="station1" checked="checked">
+             <span class="checkboxText">Temperature</span>
+            </input>
+            <span class = "checkboxIcon"/>
+          </label>
+
+          <br>
+
+          <label class = "checkboxContainer">
+            <input id= "radio_humidity" type="radio" name="station1">
+
+            <span class="checkboxText">Humidity</span>
+
+            </input>
+            <span class = "checkboxIcon"/>
+          </label>
+
+          <br>
+
+          <label class = "checkboxContainer">
+            <input id= "radio_wind" type="radio" name="station1">
+
+            <span class="checkboxText">Wind</span>
+
+            </input>
+            <span class = "checkboxIcon"/>
+          </label>
+
+          <br>
+
+          <label class = "checkboxContainer">
+            <input id= "radio_airPressure" type="radio" name="station1">
+
+            <span class="checkboxText">Air Pressure</span>
+
+            </input>
+            <span class = "checkboxIcon"/>
+          </label>
+
+          <br>
+
+          <label class = "checkboxContainer">
+            <input id= "radio_realTime" type="radio" name="station1">
+
+            <span class="checkboxText">Minute values</span>
+
+            </input>
+            <span class = "checkboxIcon"/>
+          </label>
+
+          <br><b>Specify the timeframe:</b><br>
+          <div id="dateHour">
+
+
+            <input id = "inp_fromDate" type="date" placeholder="From (date)">
+            <input id = "inp_toDate" type="date" placeholder="To (date)">
+            <h4 style="margin:0px;">Timeframe presets</h4>
+            <input type="button" onclick="setPreset(-30)" class="button30" value="30 Days"></button>
+            <input type="button" class="button30" onclick="setPreset(-14)" value="14 Days"></button>
+            <input type="button" class="button30" onclick="setPreset(-7)" value="7 Days"></button>
+          </div>
+
+          <b>Weather Stations</b><br>
+
+            <label class = "checkboxContainer">
+              <input id = "station1" type="radio" name="station" checked="checked">
+               <span class="checkboxText">Weather Station 1</span>
+              </input>
+              <span class = "checkboxIcon"/>
+            </label>
+
+            <br>
+
+            <label class = "checkboxContainer">
+              <input id = "station2" type="radio" name="station">
+
+              <span class="checkboxText">Weather Station 2</span>
+
+              </input>
+              <span class = "checkboxIcon"/>
+            </label>
+
+            <br>
+
+            <b>How the data will be presented </b><br>
+
+            <label class = "checkboxContainer">
+              <input id = "radio_chart" type="radio" name="view" checked>
+
+              <span class="checkboxText">Chart</span>
+
+              </input>
+              <span class = "checkboxIcon"/>
+            </label>
+
+            <br>
+
+            <label class = "checkboxContainer">
+              <input id = "radio_table" type="radio" name="view">
+
+              <span class="checkboxText">Table</span>
+
+              </input>
+              <span class = "checkboxIcon"/>
+            </label>
+<br>
+</br>
+            <button onclick="applyWeatherFilter()" id="btn_filter">
+              Apply filters
+              </button>
+      </div>
+
+      <div id="realTimeCharts">
+        <div id="minuteValueDescription">
+        <h2>Minute value charts</h2>
+        <p>Charts for minute values are shown below. If charts are too crowded reduce the timeframe. <br>For example if you want to view data during 10. May 2019, set timeframe to 10/05/2019 and 10/05/2019.</p>
+      </div>
+        <h4>Temperature chart:</h4>
+        <div  id="chartTemperature" class="realTimeChart"></div>
+        <h4>Humidity chart:</h4>
+        <div id="chartHumidity" class="realTimeChart"></div>
+        <h4>Wind chart:</h4>
+        <div id="chartWind" class="realTimeChart"></div>
+        <h4>Pressure chart:</h4>
+        <div id="chartPressure" class="realTimeChart"></div>
+      </div>
+
+      <div id = "description">
+<!-- description text is copied from earlier version-->
+        <h4 style="font-size:0.1px">-</h4>
+        <h3>Weather Stations in Hessdalen</h3>
+        <span>Installed 07.05.2014 - Updated every hour.</span>
+
+
+
+        <table class="tg">
+          <tr>
+            <th class="tg-0lax">Data Measurement</th>
+            <th class="tg-0lax">Station 1</th>
+            <th class="tg-0lax">Station 2</th>
+            <th class="tg-0lax">Graph Presentation</th>
+          </tr>
+          <tr>
+            <td class="tg-0lax">
+              <ul>
+              <li>Temperature</li>
+              <li>Humidity</li>
+              <li>Air pressure</li>
+              <li>Wind speed</li>
+              <li>Wind direction</li>
+              </ul>
+            </td>
+            <td class="tg-0lax">
+              <ul>
+                  <p>Placed at the Automatic Measurement Station</p>
+                  <p>Altitude: ca 640 m.a.s.l</p>
+                  <p>Map: <a target="_blank" href="https://www.google.com/maps/place/62%C2%B049%2716.1%22N+11%C2%B012%2709.2%22E/@62.8211512,11.202568,2077m/data=!3m1!1e3!4m2!3m1!1s0x0:0x0">Google</a> <a target="_blank" href="http://kart.gulesider.no/m/J2qrp">Gule Sider</a></p>
+              </ul>
+            </td>
+            <td class="tg-0lax">
+              <ul>
+                  <p>Placed 171m South-East of the AMS</p>
+                  <p>Altitude: ca 690 m.a.s.l</p>
+                  <p>Map: <a target="_blank" href="https://www.google.com/maps/place/62%C2%B049'13.8%22N+11%C2%B012'20.7%22E/@62.820501,11.20576,2082m/data=!3m2!1e3!4b1!4m2!3m1!1s0x0:0x0">Google</a> <a target="_blank" href="http://kart.gulesider.no/m/gd5nPs">Gule Sider</a></p>
+              </ul>
+            </td>
+            <td class="tg-0lax">
+              <ul>
+                  <p>If the selected time period is 10 days or less, all measurement data can be displayed. If selected time period is between 11 and 30 days, "default" is to display data from 06 AM and 12 PM. At periods greater than 30 days, data is limited to show one measurement per day.</p>
+                  <p>You may choose to restrict the measurement data for specific times of the day. This can be done by checking the various times shown in the settings. For example, if we choose 00:00 it will only give you data for that hour every day.</p>
+              </ul>
+            </td>
+          </tr>
+        </table>
+
+
+
+      </div>
+
+    </div> </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+
+  </body>
+
+</HTML>
